@@ -16,6 +16,11 @@ public:
     };
 
     /**
+     * @brief Default constructor for a cell
+     */
+    Cell() : row(0), col(0), type(WALL), visited(false) {}
+
+    /**
      * @brief Constructor for a cell
      * @param row The row coordinate
      * @param col The column coordinate

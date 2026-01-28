@@ -62,7 +62,11 @@ int main() {
     int endRow = rows - 1, endCol = cols - 1;
 
     // Render the maze without solution
+    std::cout << "\n========================================" << std::endl;
+    std::cout << "   GENERATED MAZE (Before Solving)" << std::endl;
+    std::cout << "========================================" << std::endl;
     MazeRenderer::render(maze, startRow, startCol, endRow, endCol);
+    std::cout << std::flush;
 
     // Verify solvability
     std::cout << "Verifying maze solvability..." << std::endl;
@@ -80,7 +84,11 @@ int main() {
         std::cout << "Shortest path length: " << path.size() << " cells" << std::endl;
 
         // Render the maze with the solution path
+        std::cout << "\n========================================" << std::endl;
+        std::cout << "   MAZE WITH SOLUTION PATH (.)" << std::endl;
+        std::cout << "========================================" << std::endl;
         MazeRenderer::renderWithPath(maze, path, startRow, startCol, endRow, endCol);
+        std::cout << std::flush;
     } else {
         std::cerr << "\n✗ ERROR: Maze is NOT solvable! (This should never happen)" << std::endl;
         return 1;

@@ -34,28 +34,34 @@ bool MazeGenerator::generateMaze(Maze& maze) {
 }
 
 void MazeGenerator::recursiveBacktrack(Maze& maze, int row, int col) {
-    // Get unvisited neighbors
-    std::vector<std::pair<int, int>> neighbors = maze.getUnvisitedNeighbors(row, col);
+    // Mark current cell as visited
+    maze.getCell(row, col).setVisited(true);
 
-    // Shuffle neighbors for randomness and varied branching
-    shuffleNeighbors(neighbors);
+    // Directions: up, down, left, right (moving by 2 cells)
+    const int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
+    
+    // Shuffle directions for randomness
+    std::vector<int> dirIndices = {0, 1, 2, 3};
+    std::shuffle(dirIndices.begin(), dirIndices.end(), rng);
 
-    // Visit each unvisited neighbor
-    for (const auto& neighbor : neighbors) {
-        int nextRow = neighbor.first;
-        int nextCol = neighbor.second;
+    // Try each direction
+    for (int dirIdx : dirIndices) {
+        int newRow = row + directions[dirIdx][0];
+        int newCol = col + directions[dirIdx][1];
 
-        // If neighbor hasn't been visited, carve a path and recurse
-        if (!maze.getCell(nextRow, nextCol).isVisited()) {
-            // Mark the neighbor cell as a path
-            maze.getCell(nextRow, nextCol).setType(Cell::PATH);
-            maze.getCell(nextRow, nextCol).setVisited(true);
+        // Check if the new cell is within bounds and unvisited
+        if (maze.isInBounds(newRow, newCol) && !maze.getCell(newRow, newCol).isVisited()) {
+            // Carve path between current cell and new cell (the wall between them)
+            int wallRow = row + directions[dirIdx][0] / 2;
+            int wallCol = col + directions[dirIdx][1] / 2;
+            
+            maze.getCell(wallRow, wallCol).setType(Cell::PATH);
+            maze.getCell(newRow, newCol).setType(Cell::PATH);
 
-            // Recursively continue from the neighbor
-            recursiveBacktrack(maze, nextRow, nextCol);
+            // Recursively carve from the new cell
+            recursiveBacktrack(maze, newRow, newCol);
         }
     }
-    // Backtrack: return to previous cell when no unvisited neighbors exist
 }
 
 void MazeGenerator::shuffleNeighbors(std::vector<std::pair<int, int>>& neighbors) {

@@ -1,5 +1,6 @@
 #include "MazeSolver.h"
 #include <queue>
+#include <algorithm>
 
 bool MazeSolver::isSolvable(Maze& maze, int startRow, int startCol, int endRow, int endCol) {
     // Reset visited flags for the maze
